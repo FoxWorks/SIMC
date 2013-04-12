@@ -20,8 +20,3 @@ project "simc"
               "../external/tinyxml/tiny*.cpp" }
    configuration "not windows"
       links { "tinyxml" }
-
-   configuration "*Dynamic*"
-      defines { "SIMC_DYNAMIC" }
-   configuration "*SingleThread*"
-      defines { "SIMC_SINGLETHREADED" }

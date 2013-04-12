@@ -63,6 +63,12 @@ solution (SOLUTION_NAME)
       targetsuffix "_std32"
    configuration { "x32", "*SingleThread*", "Release*" }
       targetsuffix "_st32"
+      
+   -- Static flags for libraries
+   configuration "*Dynamic*"
+      defines { "EVDS_DYNAMIC", "IVSS_DYNAMIC", "RDRS_DYNAMIC", "SIMC_DYNAMIC" }
+   configuration "*SingleThread*"
+      defines { "EVDS_SINGLETHREADED", "IVSS_SINGLETHREADED", "RDRS_SINGLETHREADED", "SIMC_SINGLETHREADED" }
 
    -- Windows-specific
    configuration { "windows" }
