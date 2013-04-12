@@ -28,7 +28,7 @@ configurations {
 }
 
 -- Setup environment
-location (_WORKING_DIR.."/".._ACTION)
+location (_WORKING_DIR.."/"..(_ACTION or ""))
 targetdir (_WORKING_DIR.."/../bin")
 --debugdir (_WORKING_DIR.."../")
 vpaths { ["**"]  = "../source/**" }
