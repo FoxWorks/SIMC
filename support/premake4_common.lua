@@ -30,7 +30,7 @@ configurations {
 -- Setup environment
 location (_WORKING_DIR.."/".._ACTION)
 targetdir (_WORKING_DIR.."/../bin")
-debugdir (_WORKING_DIR.."/"..(solution().name))
+--debugdir (_WORKING_DIR.."../")
 vpaths { ["**"]  = "../source/**" }
 
 -- Debug/Release configurations and correct debug suffix
