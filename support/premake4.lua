@@ -1,7 +1,7 @@
 -- Create standalone solution
 if SIMC_STANDALONE ~= false then
-  SOLUTION_NAME = "simc"
-  dofile("premake4_common.lua")
+  solution "simc"
+     dofile("premake4_common.lua")
 end
 
 
@@ -11,7 +11,9 @@ end
 project "simc"
    kind "StaticLib"
    language "C++"
-   files { "../source/sim_core/**" }
+   includedirs { "../include" }
+   files { "../source/sim_core/**",
+           "../include" }
    defines { "SIMC_LIBRARY" }
  
    configuration "windows"
@@ -20,8 +22,3 @@ project "simc"
               "../external/tinyxml/tiny*.cpp" }
    configuration "not windows"
       links { "tinyxml" }
-
-   configuration "*Dynamic*"
-      defines { "SIMC_DYNAMIC" }
-   configuration "*SingleThread*"
-      defines { "SIMC_SINGLETHREADED" }

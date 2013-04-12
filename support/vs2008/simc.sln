@@ -1,0 +1,62 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "simc", "simc.vcproj", "{4A553BB0-DE23-E044-A3BC-104563A404BA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Debug|x64 = Debug|x64
+		Release|Win32 = Release|Win32
+		Release|x64 = Release|x64
+		DebugDynamic|Win32 = DebugDynamic|Win32
+		DebugDynamic|x64 = DebugDynamic|x64
+		ReleaseDynamic|Win32 = ReleaseDynamic|Win32
+		ReleaseDynamic|x64 = ReleaseDynamic|x64
+		DebugSingleThread|Win32 = DebugSingleThread|Win32
+		DebugSingleThread|x64 = DebugSingleThread|x64
+		ReleaseSingleThread|Win32 = ReleaseSingleThread|Win32
+		ReleaseSingleThread|x64 = ReleaseSingleThread|x64
+		DebugSingleThreadDynamic|Win32 = DebugSingleThreadDynamic|Win32
+		DebugSingleThreadDynamic|x64 = DebugSingleThreadDynamic|x64
+		ReleaseSingleThreadDynamic|Win32 = ReleaseSingleThreadDynamic|Win32
+		ReleaseSingleThreadDynamic|x64 = ReleaseSingleThreadDynamic|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4A553BB0-DE23-E044-A3BC-104563A404BA}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4A553BB0-DE23-E044-A3BC-104563A404BA}.Debug|Win32.Build.0 = Debug|Win32
+		{4A553BB0-DE23-E044-A3BC-104563A404BA}.Debug|x64.ActiveCfg = Debug|x64
+		{4A553BB0-DE23-E044-A3BC-104563A404BA}.Debug|x64.Build.0 = Debug|x64
+		{4A553BB0-DE23-E044-A3BC-104563A404BA}.Release|Win32.ActiveCfg = Release|Win32
+		{4A553BB0-DE23-E044-A3BC-104563A404BA}.Release|Win32.Build.0 = Release|Win32
+		{4A553BB0-DE23-E044-A3BC-104563A404BA}.Release|x64.ActiveCfg = Release|x64
+		{4A553BB0-DE23-E044-A3BC-104563A404BA}.Release|x64.Build.0 = Release|x64
+		{4A553BB0-DE23-E044-A3BC-104563A404BA}.DebugDynamic|Win32.ActiveCfg = DebugDynamic|Win32
+		{4A553BB0-DE23-E044-A3BC-104563A404BA}.DebugDynamic|Win32.Build.0 = DebugDynamic|Win32
+		{4A553BB0-DE23-E044-A3BC-104563A404BA}.DebugDynamic|x64.ActiveCfg = DebugDynamic|x64
+		{4A553BB0-DE23-E044-A3BC-104563A404BA}.DebugDynamic|x64.Build.0 = DebugDynamic|x64
+		{4A553BB0-DE23-E044-A3BC-104563A404BA}.ReleaseDynamic|Win32.ActiveCfg = ReleaseDynamic|Win32
+		{4A553BB0-DE23-E044-A3BC-104563A404BA}.ReleaseDynamic|Win32.Build.0 = ReleaseDynamic|Win32
+		{4A553BB0-DE23-E044-A3BC-104563A404BA}.ReleaseDynamic|x64.ActiveCfg = ReleaseDynamic|x64
+		{4A553BB0-DE23-E044-A3BC-104563A404BA}.ReleaseDynamic|x64.Build.0 = ReleaseDynamic|x64
+		{4A553BB0-DE23-E044-A3BC-104563A404BA}.DebugSingleThread|Win32.ActiveCfg = DebugSingleThread|Win32
+		{4A553BB0-DE23-E044-A3BC-104563A404BA}.DebugSingleThread|Win32.Build.0 = DebugSingleThread|Win32
+		{4A553BB0-DE23-E044-A3BC-104563A404BA}.DebugSingleThread|x64.ActiveCfg = DebugSingleThread|x64
+		{4A553BB0-DE23-E044-A3BC-104563A404BA}.DebugSingleThread|x64.Build.0 = DebugSingleThread|x64
+		{4A553BB0-DE23-E044-A3BC-104563A404BA}.ReleaseSingleThread|Win32.ActiveCfg = ReleaseSingleThread|Win32
+		{4A553BB0-DE23-E044-A3BC-104563A404BA}.ReleaseSingleThread|Win32.Build.0 = ReleaseSingleThread|Win32
+		{4A553BB0-DE23-E044-A3BC-104563A404BA}.ReleaseSingleThread|x64.ActiveCfg = ReleaseSingleThread|x64
+		{4A553BB0-DE23-E044-A3BC-104563A404BA}.ReleaseSingleThread|x64.Build.0 = ReleaseSingleThread|x64
+		{4A553BB0-DE23-E044-A3BC-104563A404BA}.DebugSingleThreadDynamic|Win32.ActiveCfg = DebugSingleThreadDynamic|Win32
+		{4A553BB0-DE23-E044-A3BC-104563A404BA}.DebugSingleThreadDynamic|Win32.Build.0 = DebugSingleThreadDynamic|Win32
+		{4A553BB0-DE23-E044-A3BC-104563A404BA}.DebugSingleThreadDynamic|x64.ActiveCfg = DebugSingleThreadDynamic|x64
+		{4A553BB0-DE23-E044-A3BC-104563A404BA}.DebugSingleThreadDynamic|x64.Build.0 = DebugSingleThreadDynamic|x64
+		{4A553BB0-DE23-E044-A3BC-104563A404BA}.ReleaseSingleThreadDynamic|Win32.ActiveCfg = ReleaseSingleThreadDynamic|Win32
+		{4A553BB0-DE23-E044-A3BC-104563A404BA}.ReleaseSingleThreadDynamic|Win32.Build.0 = ReleaseSingleThreadDynamic|Win32
+		{4A553BB0-DE23-E044-A3BC-104563A404BA}.ReleaseSingleThreadDynamic|x64.ActiveCfg = ReleaseSingleThreadDynamic|x64
+		{4A553BB0-DE23-E044-A3BC-104563A404BA}.ReleaseSingleThreadDynamic|x64.Build.0 = ReleaseSingleThreadDynamic|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
