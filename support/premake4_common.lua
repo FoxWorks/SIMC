@@ -56,35 +56,11 @@ configuration { "x32", "*SingleThread*", "Debug*" }
 configuration { "x32", "*SingleThread*", "Release*" }
    targetsuffix "_st32"
 
-<<<<<<< HEAD
 -- Static flags for libraries
 configuration "*Dynamic*"
    defines { "EVDS_DYNAMIC", "IVSS_DYNAMIC", "RDRS_DYNAMIC", "SIMC_DYNAMIC" }
 configuration "*SingleThread*"
    defines { "EVDS_SINGLETHREADED", "IVSS_SINGLETHREADED", "RDRS_SINGLETHREADED", "SIMC_SINGLETHREADED" }
-=======
-   -- Generate suffixes
-   configuration { "x64", "Debug*" }
-      targetsuffix "d"
-   configuration { "x32", "Debug*" }
-      targetsuffix "d32"
-   configuration { "x32", "Release*" }
-      targetsuffix "32"
-   configuration { "x64", "*SingleThread*", "Debug*" }
-      targetsuffix "_std"
-   configuration { "x64", "*SingleThread*", "Release*" }
-      targetsuffix "_st"
-   configuration { "x32", "*SingleThread*", "Debug*" }
-      targetsuffix "_std32"
-   configuration { "x32", "*SingleThread*", "Release*" }
-      targetsuffix "_st32"
-      
-   -- Static flags for libraries
-   configuration "*Dynamic*"
-      defines { "EVDS_DYNAMIC", "IVSS_DYNAMIC", "RDRS_DYNAMIC", "SIMC_DYNAMIC" }
-   configuration "*SingleThread*"
-      defines { "EVDS_SINGLETHREADED", "IVSS_SINGLETHREADED", "RDRS_SINGLETHREADED", "SIMC_SINGLETHREADED" }
->>>>>>> 250666edef945af5429072d6da2e4f9830eda0da
 
 -- Windows-specific
 configuration { "windows" }
