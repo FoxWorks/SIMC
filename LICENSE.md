@@ -1,3 +1,15 @@
+General Information
+--------------------------------------------------------------------------------
+Copyright (C) 2012-2013, Black Phoenix (http://brain.wireos.com/)
+  (contact at phoenix@uol.ua or popovych@yandex.ru)
+  
+Portions of SIMC (SIMulation Core) are derived from GLFW (www.glfw.org). The
+original threading library code belongs to its authors:
+  Copyright (C) 2002-2006 Marcus Geelnard
+  Copyright (C) 2006-2011 Camilla Berglund
+
+Modified BSD License
+--------------------------------------------------------------------------------
 Copyright (C) 2012-2013, Black Phoenix
 All rights reserved.
 
