@@ -31,7 +31,12 @@ configurations {
 location (_WORKING_DIR.."/"..(_ACTION or ""))
 targetdir (_WORKING_DIR.."/../bin")
 --debugdir (_WORKING_DIR.."../")
-vpaths { ["**"]  = "../source/**" }
+vpaths { ["**"]  = {"../source/**",
+                    "../external/evds/**",
+                    "../external/ivss/**",
+                    "../external/rdrs/**",
+                    "../external/simc/**",
+                    "../external/**" } }
 
 -- Debug/Release configurations and correct debug suffix
 configuration "Debug*"
