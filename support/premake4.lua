@@ -9,6 +9,7 @@ end
 -- Simulation Core
 --------------------------------------------------------------------------------
 project "simc"
+   uuid "00058543-E5EA-1540-B535-BCE859AA319E"
    kind "StaticLib"
    language "C++"
    includedirs { "../include" }
