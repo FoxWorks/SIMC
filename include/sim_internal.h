@@ -21,7 +21,6 @@
 ///
 /// Further information about the GNU Lesser General Public License can also be found on
 /// the world wide web at http://www.gnu.org.
-
 ////////////////////////////////////////////////////////////////////////////////
 #ifndef SIM_INTERNAL_H
 #define SIM_INTERNAL_H
