@@ -21,5 +21,3 @@ project "simc"
       includedirs { "../external/tinyxml" }
       files { "../source/**",
               "../external/tinyxml/tiny*.cpp" }
-   configuration "not windows"
-      links { "tinyxml" }
