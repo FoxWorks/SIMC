@@ -329,6 +329,8 @@ int SIMC_XML_AddAttributeDouble(SIMC_XML_DOCUMENT* xmldoc, SIMC_XML_ELEMENT* xml
 	TiXmlElement* element = ((TiXmlNode*)xmlelement)->ToElement();
 	if (!element) return SIMC_ERROR_INTERNAL;
 	
+	if ((value < 1e-15) && (value > -1e-15)) value = 0.0;
+	
 	char buffer[1024] = { 0 };
 	snprintf(buffer,1023,"%.15g",value);
 	element->SetAttribute(name,buffer);
