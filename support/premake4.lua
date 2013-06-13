@@ -14,9 +14,11 @@ project "simc"
    language "C++"
    includedirs {
      "../include",
-     "../external/tinyxml" }
+     "../external/tinyxml"
+   }
    files {
      "../source/**",
+     "../include/**",
      "../external/tinyxml/tiny*.cpp",
-     "../include" }
+   }
    defines { "SIMC_LIBRARY" }
