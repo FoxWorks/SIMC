@@ -143,11 +143,11 @@ void SIMC_Queue_Clear(SIMC_QUEUE* queue) {
 /// @brief Gets approximate information about queue state.
 ////////////////////////////////////////////////////////////////////////////////
 void SIMC_Queue_State(SIMC_QUEUE* queue, int* free_slots, int* used_slots) {
-	void** old_read = queue->read_ptr;
-	void** old_write = queue->write_ptr;
+	char* old_read = queue->read_ptr;
+	char* old_write = queue->write_ptr;
 	int used_slots_;
 
-	if (old_read < old_write) {
+	if (old_read <= old_write) {
 		used_slots_ = (int)(old_write-old_read)/queue->element_size;
 	} else {
 		used_slots_ = (int)(queue->size-(old_read-old_write))/queue->element_size;
