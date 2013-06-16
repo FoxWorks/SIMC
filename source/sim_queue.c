@@ -150,7 +150,7 @@ void SIMC_Queue_State(SIMC_QUEUE* queue, int* free_slots, int* used_slots) {
 	if (old_read <= old_write) {
 		used_slots_ = (int)(old_write-old_read)/queue->element_size;
 	} else {
-		used_slots_ = (int)(queue->size-(old_read-old_write))/queue->element_size;
+		used_slots_ = (int)(queue->size-(old_write-old_read))/queue->element_size;
 		if (old_read == old_write) used_slots_ = 0;
 	}
 
