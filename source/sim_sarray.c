@@ -45,8 +45,9 @@ void SIMC_StorageArray_Create(SIMC_STORAGEARRAY** p_arr, int element_size) {
 /// @brief 
 ////////////////////////////////////////////////////////////////////////////////
 void SIMC_StorageArray_Destroy(SIMC_STORAGEARRAY* arr) {
-	//int i = 0;
-	//for (i = 0; i < arr->element_count/ELEMENTS_PER_BLOCK
+	int i;
+	for (i = 0; i < arr->blocks_count; i++) free(arr->blocks[i]);
+	free(arr);
 }
 
 
@@ -58,9 +59,9 @@ void* SIMC_StorageArray_Add(SIMC_STORAGEARRAY* arr) {
 	int index_in_block;
 
 	//Add new element
-	arr->element_count++;
 	target_block_index = arr->element_count / ELEMENTS_PER_BLOCK;
 	index_in_block = arr->element_count % ELEMENTS_PER_BLOCK;
+	arr->element_count++;
 
 	//See if any new blocks must be added
 	if (target_block_index >= arr->blocks_count) {
@@ -82,8 +83,8 @@ void* SIMC_StorageArray_Get(SIMC_STORAGEARRAY* arr, int index) {
 	int index_in_block;
 
 	//Add new element
-	target_block_index = arr->element_count / ELEMENTS_PER_BLOCK;
-	index_in_block = arr->element_count % ELEMENTS_PER_BLOCK;
+	target_block_index = index / ELEMENTS_PER_BLOCK;
+	index_in_block = index % ELEMENTS_PER_BLOCK;
 
 	//Return pointer to element
 	return (void*)((char*)arr->blocks[target_block_index] + index_in_block*arr->element_size);
@@ -93,13 +94,14 @@ void* SIMC_StorageArray_Get(SIMC_STORAGEARRAY* arr, int index) {
 ////////////////////////////////////////////////////////////////////////////////
 /// @brief 
 ////////////////////////////////////////////////////////////////////////////////
-void* SIMC_StorageArray_GetAll(SIMC_STORAGEARRAY* arr) {
+void* SIMC_StorageArray_GetAllAndDestroy(SIMC_STORAGEARRAY* arr) {
 	int i;
 	void* all_data = malloc(arr->element_size * arr->element_count);
 
 	for (i = 0; i < arr->element_count; i++) { //FIXME: copy by blocks
 		memcpy((char*)all_data + i*arr->element_size,SIMC_StorageArray_Get(arr,i),arr->element_size);
 	}
+	SIMC_StorageArray_Destroy(arr);
 	return all_data;
 }
 

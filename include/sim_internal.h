@@ -184,10 +184,15 @@ void SIMC_List_MoveInFront(SIMC_LIST* list, SIMC_LIST_ENTRY* dest, SIMC_LIST_ENT
 
 // Create new storage array (dumb data structure for quickly appending small objects)
 void SIMC_StorageArray_Create(SIMC_STORAGEARRAY** p_arr, int element_size);
+// Destroy storage array
 void SIMC_StorageArray_Destroy(SIMC_STORAGEARRAY* arr);
+// Add a new element
 void* SIMC_StorageArray_Add(SIMC_STORAGEARRAY* arr);
+// Get element by index
 void* SIMC_StorageArray_Get(SIMC_STORAGEARRAY* arr, int index);
-void* SIMC_StorageArray_GetAll(SIMC_STORAGEARRAY* arr);
+// Get all elements and destroy array
+void* SIMC_StorageArray_GetAllAndDestroy(SIMC_STORAGEARRAY* arr);
+// Get elements count
 int SIMC_StorageArray_Count(SIMC_STORAGEARRAY* arr);
 
 // Append data to the list (very slow and halts every other thread)
