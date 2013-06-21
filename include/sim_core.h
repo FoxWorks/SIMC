@@ -47,6 +47,7 @@ extern "C" {
 //Forward structure declarations
 typedef struct SIMC_LIST_ENTRY_TAG SIMC_LIST_ENTRY;
 typedef struct SIMC_LIST_TAG SIMC_LIST;
+typedef struct SIMC_STORAGEARRAY_TAG SIMC_STORAGEARRAY;
 typedef struct SIMC_QUEUE_TAG SIMC_QUEUE;
 
 

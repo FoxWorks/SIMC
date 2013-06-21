@@ -113,6 +113,24 @@ struct SIMC_LIST_TAG {
 
 ////////////////////////////////////////////////////////////////////////////////
 /// @ingroup SIMC_UTILS
+/// @struct SIMC_STORAGEARRAY
+///
+////////////////////////////////////////////////////////////////////////////////
+#ifndef DOXYGEN_INTERNAL_STRUCTS
+struct SIMC_STORAGEARRAY_TAG {
+	void** blocks;
+	int blocks_count;
+
+	int element_count;
+	int element_size;
+};
+#endif
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+/// @ingroup SIMC_UTILS
 /// @struct SIMC_QUEUE
 /// @brief 64-bit queue between threads
 ///
@@ -141,6 +159,7 @@ struct SIMC_QUEUE_TAG {
 
 
 
+
 ////////////////////////////////////////////////////////////////////////////////
 // Internal API
 ////////////////////////////////////////////////////////////////////////////////
@@ -162,6 +181,14 @@ void SIMC_List_Create(SIMC_LIST** p_list, int multithreaded);
 void SIMC_List_Destroy(SIMC_LIST* list);
 // Moves element src in front of element dest
 void SIMC_List_MoveInFront(SIMC_LIST* list, SIMC_LIST_ENTRY* dest, SIMC_LIST_ENTRY* source);
+
+// Create new storage array (dumb data structure for quickly appending small objects)
+void SIMC_StorageArray_Create(SIMC_STORAGEARRAY** p_arr, int element_size);
+void SIMC_StorageArray_Destroy(SIMC_STORAGEARRAY* arr);
+void* SIMC_StorageArray_Add(SIMC_STORAGEARRAY* arr);
+void* SIMC_StorageArray_Get(SIMC_STORAGEARRAY* arr, int index);
+void* SIMC_StorageArray_GetAll(SIMC_STORAGEARRAY* arr);
+int SIMC_StorageArray_Count(SIMC_STORAGEARRAY* arr);
 
 // Append data to the list (very slow and halts every other thread)
 SIMC_LIST_ENTRY* SIMC_List_Append(SIMC_LIST* list, void* data);
