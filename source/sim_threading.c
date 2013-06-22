@@ -895,7 +895,7 @@ void SIMC_Thread_Kill(SIMC_THREAD_ID ID) {
 	//Get thread information pointer
 	thread = SIMC_Thread_Internal_GetPointer(ID);
 	if (thread == NULL) {
-		SIMC_Thread_EnterCriticalSection();
+		SIMC_Thread_LeaveCriticalSection();
 		return;
 	}
 
