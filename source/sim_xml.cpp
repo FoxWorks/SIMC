@@ -91,6 +91,9 @@ int SIMC_XML_GetElement(SIMC_XML_DOCUMENT* xmldoc, SIMC_XML_ELEMENT* xmlrootelem
 		*xmlelement = (SIMC_XML_ELEMENT*)node;
 	} else {
 		TiXmlNode* node = element->FirstChild();
+		while (node && node->ToText()) { //Skip text nodes (which are not elements)
+			SIMC_XML_Iterate(xmldoc,xmlrootelement,(SIMC_XML_ELEMENT**)&node,0);
+		}
 		*xmlelement = (SIMC_XML_ELEMENT*)node;
 	}
 	return SIMC_OK;
