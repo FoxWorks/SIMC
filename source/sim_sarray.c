@@ -47,6 +47,7 @@ void SIMC_StorageArray_Create(SIMC_STORAGEARRAY** p_arr, int element_size) {
 void SIMC_StorageArray_Destroy(SIMC_STORAGEARRAY* arr) {
 	int i;
 	for (i = 0; i < arr->blocks_count; i++) free(arr->blocks[i]);
+	free(arr->blocks);
 	free(arr);
 }
 
