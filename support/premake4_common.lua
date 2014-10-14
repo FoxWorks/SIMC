@@ -77,6 +77,12 @@ configuration { "windows", "x64" }
 configuration { "not windows" }
    links { "m", "pthread" }
    linkoptions { "-lstdc++" }
+   
+-- Configuration specific
+configuration { "x32" }
+   defines { "PLATFORM32" }
+configuration { "x64" }
+   defines { "PLATFORM64" }
 
 -- Default configuration for libraries
 function library()
