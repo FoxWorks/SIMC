@@ -6,7 +6,7 @@
 ///  Copyright (C) 2002-2006, Marcus Geelnard
 ///  Copyright (C) 2006-2011, Camilla Berglund
 ////////////////////////////////////////////////////////////////////////////////
-/// Copyright (C) 2012-2013, Black Phoenix
+/// Copyright (C) 2012-2015, Black Phoenix
 ///
 /// This program is free software; you can redistribute it and/or modify it under
 /// the terms of the GNU Lesser General Public License as published by the Free Software
