@@ -62,6 +62,8 @@ typedef struct SIMC_QUEUE_TAG SIMC_QUEUE;
 
 /// Thread handle
 typedef void* SIMC_THREAD_ID;
+/// Library handle
+typedef void* SIMC_LIBRARY_ID;
 /// Lock (critical section/mutex) handle
 typedef void* SIMC_LOCK_ID;
 /// SRW lock (slim read/write) handle
@@ -106,6 +108,16 @@ SIMC_API int SIMC_Queue_Peek(SIMC_QUEUE* queue, void** p_value);
 SIMC_API void SIMC_Queue_Clear(SIMC_QUEUE* queue);
 // Gets approximate information about queue state
 SIMC_API void SIMC_Queue_State(SIMC_QUEUE* queue, int* free_slots, int* used_slots);
+
+
+
+
+// Load a library
+SIMC_API SIMC_LIBRARY_ID SIMC_Library_Load(char* library_name);
+// Unload library
+SIMC_API void SIMC_Library_Unload(SIMC_LIBRARY_ID library);
+// Get pointer to a function
+SIMC_API void* SIMC_Library_GetFunction(SIMC_LIBRARY_ID library, char* function_name);
 
 
 
