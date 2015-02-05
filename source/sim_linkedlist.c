@@ -146,7 +146,7 @@ void SIMC_List_Remove(SIMC_LIST* list, SIMC_LIST_ENTRY* entry) {
 #ifndef SIMC_SINGLETHREADED
 	//Start atomic write operation on list and block everyones access to it
 	SIMC_SRW_LeaveRead(list->lock);
-	// <--- list/entry can be removed at this point, and the list will enter undefined state
+	// <--- list/entry can be removed at this point, and the list will enter undefined state. FIXME: add a global mutex
 	SIMC_SRW_EnterWrite(list->lock);
 #endif
 
