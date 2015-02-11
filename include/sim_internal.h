@@ -28,17 +28,6 @@
 extern "C" {
 #endif
 
-// Syntax error reading an XML file
-typedef int SIMC_Callback_XMLSyntaxError(void* userdata, const char* error);
-
-// No error
-#define SIMC_OK								0
-// Internal error
-#define SIMC_ERROR_INTERNAL					1
-// Error opening file (file not found or not accessible)
-#define SIMC_ERROR_FILE						2
-// Syntax error in configuration string/file
-#define SIMC_ERROR_SYNTAX					3
 
 /// Compatibility with Windows systems
 #ifdef _WIN32
@@ -46,6 +35,11 @@ typedef int SIMC_Callback_XMLSyntaxError(void* userdata, const char* error);
 #define snscanf _snscanf
 #define alloca _alloca
 #endif
+
+// Required for correct memory allocations when loaded from DLL
+extern SIMC_Callback_Allocate* SIMC_Allocate;
+extern SIMC_Callback_Free* SIMC_Free;
+extern void* SIMC_Userdata;
 
 
 

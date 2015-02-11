@@ -47,7 +47,7 @@
 /// @param[in] multithreaded Should multithreading support be enabled for this list
 ////////////////////////////////////////////////////////////////////////////////
 void SIMC_List_Create(SIMC_LIST** p_list, int multithreaded) {
-	SIMC_LIST* list = (SIMC_LIST*)malloc(sizeof(SIMC_LIST));
+	SIMC_LIST* list = (SIMC_LIST*)SIMC_Allocate(SIMC_Userdata, sizeof(SIMC_LIST));
 	list->first = 0;
 	list->last = 0;
 #ifndef SIMC_SINGLETHREADED
@@ -76,10 +76,10 @@ void SIMC_List_Destroy(SIMC_LIST* list) {
 	while (entry) {
 		SIMC_LIST_ENTRY* _entry = entry;
 		entry = entry->next;
-		free(_entry);
+		SIMC_Free(SIMC_Userdata, _entry);
 	}
 	SIMC_SRW_Destroy(list->lock);
-	free(list);
+	SIMC_Free(SIMC_Userdata, list);
 }
 
 
@@ -101,7 +101,7 @@ SIMC_LIST_ENTRY* SIMC_List_Append(SIMC_LIST* list, void* data) {
 	SIMC_SRW_EnterWrite(list->lock);
 
 	//Create new entry
-	entry = (SIMC_LIST_ENTRY*)malloc(sizeof(SIMC_LIST_ENTRY));
+	entry = (SIMC_LIST_ENTRY*)SIMC_Allocate(SIMC_Userdata, sizeof(SIMC_LIST_ENTRY));
 	entry->previous = list->last; //"last" will not change during atomic operation
 	entry->next = 0;
 	entry->data = data;
@@ -159,7 +159,7 @@ void SIMC_List_Remove(SIMC_LIST* list, SIMC_LIST_ENTRY* entry) {
 	if (list->last == entry) list->last = entry->previous;
 
 	//Destroy the entry data (which is why iterator must be terminated)
-	free(entry);
+	SIMC_Free(SIMC_Userdata, entry);
 
 	//End atomic operation on list and give everyone access
 	SIMC_SRW_LeaveWrite(list->lock);

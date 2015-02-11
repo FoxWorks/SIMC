@@ -53,6 +53,39 @@ typedef struct SIMC_QUEUE_TAG SIMC_QUEUE;
 
 
 
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+/// @defgroup SIMC Simulation Core
+/// @brief Basic constants and callbacks
+///
+/// @{
+////////////////////////////////////////////////////////////////////////////////
+
+// Syntax error reading an XML file
+typedef int SIMC_Callback_XMLSyntaxError(void* userdata, const char* error);
+// Allocate memory
+typedef void* SIMC_Callback_Allocate(void* userdata, size_t size);
+// Free memory
+typedef void SIMC_Callback_Free(void* userdata, void* pointer);
+
+// No error
+#define SIMC_OK								0
+// Internal error
+#define SIMC_ERROR_INTERNAL					1
+// Error opening file (file not found or not accessible)
+#define SIMC_ERROR_FILE						2
+// Syntax error in configuration string/file
+#define SIMC_ERROR_SYNTAX					3
+
+////////////////////////////////////////////////////////////////////////////////
+/// @}
+////////////////////////////////////////////////////////////////////////////////
+
+
+
+
 ////////////////////////////////////////////////////////////////////////////////
 /// @defgroup SIMC Simulation Core
 /// @brief Basic set of utility functions shared between simulators
@@ -66,10 +99,17 @@ typedef void* SIMC_THREAD_ID;
 typedef void* SIMC_LIBRARY_ID;
 /// Lock (critical section/mutex) handle
 typedef void* SIMC_LOCK_ID;
+/// Event handle
+typedef void* SIMC_EVENT_ID;
 /// SRW lock (slim read/write) handle
 typedef void* SIMC_SRW_ID;
 /// Invalid handle for use with SIMC_LOCK_ID, SIMC_SRW_ID, SIMC_THREAD_ID
 #define SIMC_THREAD_BAD_ID ((void*)0xFFFFFFFF)
+
+
+
+// Set allocation functions (required if SIMC is to be used from DLL)
+void SIMC_SetCallbacks(void* userdata, SIMC_Callback_Allocate* OnAllocate, SIMC_Callback_Free* OnFree);
 
 
 
@@ -149,10 +189,21 @@ SIMC_API SIMC_LOCK_ID SIMC_Lock_Create();
 SIMC_API void SIMC_Lock_Destroy(SIMC_LOCK_ID lockID);
 // Enter lock
 SIMC_API SIMC_LOCK_ID SIMC_Lock_Enter(SIMC_LOCK_ID lockID);
+// Try to enter lock
+//SIMC_API int SIMC_Lock_TryEnter(SIMC_LOCK_ID lockID);
 // Leave lock
 SIMC_API void SIMC_Lock_Leave(SIMC_LOCK_ID lockID);
 // Wait for lock to be left
 SIMC_API void SIMC_Lock_WaitFor(SIMC_LOCK_ID lockID);
+
+// Create a new event
+SIMC_API SIMC_EVENT_ID SIMC_Event_Create(char* eventName);
+// Fire event
+SIMC_API void SIMC_Event_Fire(SIMC_EVENT_ID eventID);
+// Reset event
+SIMC_API void SIMC_Event_Reset(SIMC_EVENT_ID eventID);
+// Wait for event to be fired
+SIMC_API int SIMC_Event_WaitFor(SIMC_EVENT_ID eventID, double time);
 
 // Create new slim read/write lock
 SIMC_API SIMC_SRW_ID SIMC_SRW_Create();

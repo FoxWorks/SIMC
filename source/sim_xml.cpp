@@ -280,7 +280,7 @@ int SIMC_XML_SaveString(SIMC_XML_DOCUMENT* xmldoc, char** description) {
 
 	doc->Accept(&printer);
 	const char* buffer = printer.CStr();
-	*description = (char*)malloc(sizeof(char)*(strlen(buffer)+1));
+	*description = (char*)SIMC_Allocate(SIMC_Userdata, sizeof(char)*(strlen(buffer)+1));
 	strcpy((char*)(*description),buffer);
 	return SIMC_OK;
 }

@@ -32,8 +32,8 @@
 /// @brief 
 ////////////////////////////////////////////////////////////////////////////////
 void SIMC_StorageArray_Create(SIMC_STORAGEARRAY** p_arr, int element_size) {
-	SIMC_STORAGEARRAY* arr = (SIMC_STORAGEARRAY*)malloc(sizeof(SIMC_STORAGEARRAY));
-	arr->blocks = (void**)malloc(sizeof(void*));
+	SIMC_STORAGEARRAY* arr = (SIMC_STORAGEARRAY*)SIMC_Allocate(SIMC_Userdata, sizeof(SIMC_STORAGEARRAY));
+	arr->blocks = (void**)SIMC_Allocate(SIMC_Userdata, sizeof(void*));
 	arr->blocks_count = 0;
 	arr->element_count = 0;
 	arr->element_size = element_size;
@@ -46,9 +46,9 @@ void SIMC_StorageArray_Create(SIMC_STORAGEARRAY** p_arr, int element_size) {
 ////////////////////////////////////////////////////////////////////////////////
 void SIMC_StorageArray_Destroy(SIMC_STORAGEARRAY* arr) {
 	int i;
-	for (i = 0; i < arr->blocks_count; i++) free(arr->blocks[i]);
-	free(arr->blocks);
-	free(arr);
+	for (i = 0; i < arr->blocks_count; i++) SIMC_Free(SIMC_Userdata, arr->blocks[i]);
+	SIMC_Free(SIMC_Userdata, arr->blocks);
+	SIMC_Free(SIMC_Userdata, arr);
 }
 
 
@@ -68,7 +68,7 @@ void* SIMC_StorageArray_Add(SIMC_STORAGEARRAY* arr) {
 	if (target_block_index >= arr->blocks_count) {
 		int index = arr->blocks_count++; //Grow one block
 		arr->blocks = (void**)realloc(arr->blocks,sizeof(void**)*arr->blocks_count);
-		arr->blocks[index] = (void*)malloc(arr->element_size * ELEMENTS_PER_BLOCK);
+		arr->blocks[index] = (void*)SIMC_Allocate(SIMC_Userdata, arr->element_size * ELEMENTS_PER_BLOCK);
 	}
 
 	//Add element to the latest block
@@ -97,7 +97,7 @@ void* SIMC_StorageArray_Get(SIMC_STORAGEARRAY* arr, int index) {
 ////////////////////////////////////////////////////////////////////////////////
 void* SIMC_StorageArray_GetAllAndDestroy(SIMC_STORAGEARRAY* arr) {
 	int i;
-	void* all_data = malloc(arr->element_size * arr->element_count);
+	void* all_data = SIMC_Allocate(SIMC_Userdata, arr->element_size * arr->element_count);
 
 	for (i = 0; i < arr->element_count; i++) { //FIXME: copy by blocks
 		memcpy((char*)all_data + i*arr->element_size,SIMC_StorageArray_Get(arr,i),arr->element_size);

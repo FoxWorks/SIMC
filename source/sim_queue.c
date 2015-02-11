@@ -29,9 +29,9 @@
 /// @brief Create a new threading-safe queue of a fixed size
 ////////////////////////////////////////////////////////////////////////////////
 void SIMC_Queue_Create(SIMC_QUEUE** p_queue, int size, int element_size) {
-	SIMC_QUEUE* queue = (SIMC_QUEUE*)malloc(sizeof(SIMC_QUEUE));
+	SIMC_QUEUE* queue = (SIMC_QUEUE*)SIMC_Allocate(SIMC_Userdata, sizeof(SIMC_QUEUE));
 
-	queue->data = malloc(element_size*size);
+	queue->data = SIMC_Allocate(SIMC_Userdata, element_size*size);
 	queue->data_last = (void*)((char*)queue->data + element_size*(size - 1));
 	queue->write_ptr = queue->data;
 	queue->read_ptr = queue->data;
@@ -45,8 +45,8 @@ void SIMC_Queue_Create(SIMC_QUEUE** p_queue, int size, int element_size) {
 /// @brief Destroy queue
 ////////////////////////////////////////////////////////////////////////////////
 void SIMC_Queue_Destroy(SIMC_QUEUE* queue) {
-	free(queue->data);
-	free(queue);
+	SIMC_Free(SIMC_Userdata, queue->data);
+	SIMC_Free(SIMC_Userdata, queue);
 }
 
 

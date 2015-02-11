@@ -40,6 +40,28 @@
 // Use WinAPI/POSIX implementation of SRW locks instead of custom implementation (windows-only)
 #define SIMC_NATIVE_SRW
 
+// Allocate memory
+void* SIMC_Default_Allocate(void* userdata, size_t size) {
+	return malloc(size);
+}
+
+// Free memory
+void SIMC_Default_Free(void* userdata, void* pointer) {
+	free(pointer);
+}
+
+// Pointers to memory allocation functions
+SIMC_Callback_Allocate* SIMC_Allocate = &SIMC_Default_Allocate;
+SIMC_Callback_Free* SIMC_Free = &SIMC_Default_Free;
+void* SIMC_Userdata = 0;
+
+// Set allocation functions
+void SIMC_SetCallbacks(void* userdata, SIMC_Callback_Allocate* OnAllocate, SIMC_Callback_Free* OnFree) {
+	SIMC_Userdata = userdata;
+	SIMC_Allocate = OnAllocate;
+	SIMC_Free = OnFree;
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // Internal data structures and typedefs
@@ -86,7 +108,7 @@ SIMC_THREAD* SIMC_Thread_Internal_GetPointer(SIMC_THREAD_ID ID) {
 void SIMC_Thread_Internal_Remove(SIMC_THREAD* thread) {
 	if (thread->previous != NULL) thread->previous->next = thread->next;
 	if (thread->next != NULL) thread->next->previous = thread->previous;
-	free((void*)thread);
+	SIMC_Free(SIMC_Userdata, (void*)thread);
 }
 #endif
 
@@ -166,7 +188,7 @@ SIMC_THREAD_ID SIMC_Thread_Create(void* func_ptr, void* userdata) {
 	SIMC_Thread_EnterCriticalSection();
 
 	//Create a new thread information memory area
-	thread = (SIMC_THREAD*)malloc(sizeof(SIMC_THREAD));
+	thread = (SIMC_THREAD*)SIMC_Allocate(SIMC_Userdata, sizeof(SIMC_THREAD));
 	if (thread == NULL) {
 		SIMC_Thread_LeaveCriticalSection();
 		return SIMC_THREAD_BAD_ID;
@@ -191,7 +213,7 @@ SIMC_THREAD_ID SIMC_Thread_Create(void* func_ptr, void* userdata) {
 
 	//Did the thread creation fail?
 	if (hThread == NULL) {
-		free((void*)thread);
+		SIMC_Free(SIMC_Userdata, (void*)thread);
 		SIMC_Thread_LeaveCriticalSection();
 		return SIMC_THREAD_BAD_ID;
 	}
@@ -417,7 +439,7 @@ SIMC_LOCK_ID SIMC_Lock_Create() {
 	CRITICAL_SECTION* lock;
 
 	//Allocate memory for lock
-	lock = (CRITICAL_SECTION*)malloc(sizeof(SIMC_Thread_CriticalSection));
+	lock = (CRITICAL_SECTION*)SIMC_Allocate(SIMC_Userdata, sizeof(SIMC_Thread_CriticalSection));
 	if (!lock)
 	{
 		return SIMC_THREAD_BAD_ID;
@@ -440,7 +462,7 @@ SIMC_LOCK_ID SIMC_Lock_Create() {
 ////////////////////////////////////////////////////////////////////////////////
 void SIMC_Lock_Destroy(SIMC_LOCK_ID lockID) {
 	DeleteCriticalSection((CRITICAL_SECTION*)lockID);
-	free((void*)lockID);
+	SIMC_Free(SIMC_Userdata, (void*)lockID);
 }
 
 
@@ -457,6 +479,12 @@ SIMC_LOCK_ID SIMC_Lock_Enter(SIMC_LOCK_ID lockID) {
 	return lockID;
 }
 
+
+////////////////////////////////////////////////////////////////////////////////
+/// @brief Try to enter exclusive lock.
+/// @param[in] lockID Lock handle
+/// @returns Whether lock could be entered
+////////////////////////////////////////////////////////////////////////////////
 /*int SIMC_Lock_TryEnter(SIMC_LOCK_ID lockID) {
 	if (lockID != SIMC_THREAD_BAD_ID) {
 		return TryEnterCriticalSection((CRITICAL_SECTION*)lockID) != 0;
@@ -490,6 +518,56 @@ void SIMC_Lock_WaitFor(SIMC_LOCK_ID lockID) {
 }
 
 
+////////////////////////////////////////////////////////////////////////////////
+/// @brief Create a new event
+////////////////////////////////////////////////////////////////////////////////
+SIMC_EVENT_ID SIMC_Event_Create(char* eventName) {
+	HANDLE handle = CreateEvent(NULL, TRUE, FALSE, eventName);
+	if (handle == NULL) return SIMC_THREAD_BAD_ID;
+	return (SIMC_EVENT_ID)handle;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+/// @brief Fire event
+////////////////////////////////////////////////////////////////////////////////
+void SIMC_Event_Fire(SIMC_EVENT_ID eventID) {
+	if (eventID != SIMC_THREAD_BAD_ID) {
+		SetEvent((HANDLE)eventID);
+	}
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+/// @brief Reset event
+////////////////////////////////////////////////////////////////////////////////
+void SIMC_Event_Reset(SIMC_EVENT_ID eventID) {
+	if (eventID != SIMC_THREAD_BAD_ID) {
+		ResetEvent((HANDLE)eventID);
+	}
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+/// @brief Wait for event to be fired
+////////////////////////////////////////////////////////////////////////////////
+int SIMC_Event_WaitFor(SIMC_EVENT_ID eventID, double time) {
+	if (eventID != SIMC_THREAD_BAD_ID) {
+		DWORD timeMs = (DWORD)(time*1000);
+		DWORD waitResult;
+		
+		if (time <= 0.0) timeMs = 0;
+		if (time > 1e9) timeMs = INFINITE;
+		waitResult = WaitForSingleObject((HANDLE)eventID, timeMs);
+
+		if (waitResult == WAIT_OBJECT_0) return 1;
+	}
+	return 0;
+}
+
+
+
+
 //Slim read-write locks (WinAPI implementation)
 #ifdef SIMC_NATIVE_SRW
 
@@ -512,7 +590,7 @@ void SIMC_Lock_WaitFor(SIMC_LOCK_ID lockID) {
 /// @returns Lock handle
 ////////////////////////////////////////////////////////////////////////////////
 SIMC_SRW_ID SIMC_SRW_Create() {
-	PSRWLOCK lock = (PSRWLOCK)malloc(sizeof(SRWLOCK));
+	PSRWLOCK lock = (PSRWLOCK)SIMC_Allocate(SIMC_Userdata, sizeof(SRWLOCK));
 	InitializeSRWLock(lock);
 	return (SIMC_SRW_ID)lock;
 }
@@ -525,7 +603,7 @@ SIMC_SRW_ID SIMC_SRW_Create() {
 void SIMC_SRW_Destroy(SIMC_SRW_ID srwID) {
 	PSRWLOCK lock = (PSRWLOCK)srwID;
 	if ((!srwID) || (srwID == SIMC_THREAD_BAD_ID)) return;
-	free(lock);
+	SIMC_Free(SIMC_Userdata, lock);
 }
 
 
@@ -582,7 +660,7 @@ typedef struct SIMC_SRW_LOCK_TAG {
 } SIMC_SRW_LOCK;
 
 SIMC_SRW_ID SIMC_SRW_Create() {
-	SIMC_SRW_LOCK* lock = (SIMC_SRW_LOCK*)malloc(sizeof(SIMC_SRW_LOCK));
+	SIMC_SRW_LOCK* lock = (SIMC_SRW_LOCK*)SIMC_Allocate(SIMC_Userdata, sizeof(SIMC_SRW_LOCK));
 	lock->write_lock = SIMC_Lock_Create();
 	lock->srw_lock = 0;
 	return (SIMC_SRW_ID)lock;
@@ -593,7 +671,7 @@ void SIMC_SRW_Destroy(SIMC_SRW_ID srwID) {
 	if ((!srwID) || (srwID == SIMC_THREAD_BAD_ID)) return;
 
 	SIMC_Lock_Destroy(lock->write_lock);
-	free(lock);
+	SIMC_Free(SIMC_Userdata, lock);
 }
 
 void SIMC_SRW_EnterRead(SIMC_SRW_ID srwID) {
@@ -688,7 +766,7 @@ void SIMC_Thread_Deinitialize() {
 			CloseHandle(thread->handle);
 
 			//Free memory allocated for this thread
-			free((void*)thread);
+			SIMC_Free(SIMC_Userdata, (void*)thread);
 		}
 
 		//Select next thread in list
@@ -776,7 +854,7 @@ SIMC_THREAD_ID SIMC_Thread_Create(void* funcPtr, void* userData) {
 	SIMC_Thread_EnterCriticalSection();
 
 	//Create a new thread information memory area
-	thread = (SIMC_THREAD*)malloc(sizeof(SIMC_THREAD));
+	thread = (SIMC_THREAD*)SIMC_Allocate(SIMC_Userdata, sizeof(SIMC_THREAD));
 	if (thread == NULL) {
 		SIMC_Thread_LeaveCriticalSection();
 		return SIMC_THREAD_BAD_ID;
@@ -799,7 +877,7 @@ SIMC_THREAD_ID SIMC_Thread_Create(void* funcPtr, void* userData) {
 
 	//Did the thread creation fail?
 	if (result != 0) {
-		free((void*)thread);
+		SIMC_Free(SIMC_Userdata, (void*)thread);
 		SIMC_Thread_LeaveCriticalSection();
 		return SIMC_THREAD_BAD_ID;
 	}
@@ -964,7 +1042,7 @@ typedef struct SIMC_SRW_LOCK_TAG {
 
 
 SIMC_SRW_ID SIMC_SRW_Create() {
-	SIMC_SRW_LOCK* lock = (SIMC_SRW_LOCK*)malloc(sizeof(SIMC_SRW_LOCK));
+	SIMC_SRW_LOCK* lock = (SIMC_SRW_LOCK*)SIMC_Allocate(SIMC_Userdata, sizeof(SIMC_SRW_LOCK));
 	lock->write_lock = SIMC_Lock_Create();
 	lock->srw_lock = 0;
 	return (SIMC_SRW_ID)lock;
@@ -975,7 +1053,7 @@ void SIMC_SRW_Destroy(SIMC_SRW_ID srwID) {
 	if ((!srwID) || (srwID == SIMC_THREAD_BAD_ID)) return;
 
 	SIMC_Lock_Destroy(lock->write_lock);
-	free(lock);
+	SIMC_Free(SIMC_Userdata, lock);
 }
 
 void SIMC_SRW_EnterRead(SIMC_SRW_ID srwID) {
@@ -1023,7 +1101,7 @@ SIMC_LOCK_ID SIMC_Lock_Create() {
 	pthread_mutex_t *mutex;
 
 	//Allocate memory for mutex
-	mutex = (pthread_mutex_t*)malloc(sizeof(pthread_mutex_t));
+	mutex = (pthread_mutex_t*)SIMC_Allocate(SIMC_Userdata, sizeof(pthread_mutex_t));
 	if(!mutex) return SIMC_THREAD_BAD_ID;
 
 	//Initialise a mutex object
@@ -1036,7 +1114,7 @@ void SIMC_Lock_Destroy(SIMC_LOCK_ID lockID) {
 	//Destroy the mutex object
 	pthread_mutex_destroy((pthread_mutex_t*)lockID);
 	//Free memory for mutex object
-	free((void*)lockID);
+	SIMC_Free(SIMC_Userdata, (void*)lockID);
 }
 
 
@@ -1097,7 +1175,7 @@ void SIMC_Thread_Deinitialize() {
 		pthread_kill(thread->posixID, SIGKILL);
 
 		//Free memory allocated for this thread
-		free((void*)thread);
+		SIMC_Free(SIMC_Userdata, (void*)thread);
 
 		//Select next thread in list
 		thread = thread_next;
