@@ -28,6 +28,9 @@
 extern "C" {
 #endif
 
+// Required for size_t
+#include <stdint.h>
+
 
 
 
@@ -171,7 +174,10 @@ SIMC_API void SIMC_Thread_Sleep(double time);
 
 #ifndef SIMC_SINGLETHREADED
 // Create thread
-SIMC_API SIMC_THREAD_ID SIMC_Thread_Create(void* funcPtr, void* userData);
+//SIMC_API SIMC_THREAD_ID SIMC_Thread_Create(void* funcPtr, void* userData);
+#define SIMC_Thread_Create(funcPtr, userData) SIMC_Thread_CreateWithName(funcPtr, userData, __FUNCTION__ " (" __FILE__ ")" ) 
+// Create thread with a name (displays the thread name in the debugger, if such feature is available)
+SIMC_API SIMC_THREAD_ID SIMC_Thread_CreateWithName(void* funcPtr, void* userData, char* funcName);
 // Get ID of the currently excuted thread
 SIMC_API SIMC_THREAD_ID SIMC_Thread_GetCurrentID();
 // Get unique ID of the currently executed thread (much faster, returns OS handle/ID)

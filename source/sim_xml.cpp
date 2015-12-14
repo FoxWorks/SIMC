@@ -30,13 +30,18 @@ int SIMC_XML_Open(const char* filename, SIMC_XML_DOCUMENT** xmldoc, SIMC_Callbac
 
 	TiXmlDocument* doc = new TiXmlDocument(filename);
 	if (!doc->LoadFile(filename)) {
-		*xmldoc = 0;
 		if (doc->ErrorId() == TiXmlDocument::TIXML_ERROR_OPENING_FILE) {
+			delete doc;
+			*xmldoc = 0;
+
 			return SIMC_ERROR_FILE;
 		} else {
 			char errorText[8192];
 			snprintf(errorText,8191,"%s:%d %s",filename,doc->ErrorRow(),doc->ErrorDesc());
 			errorText[8191] = 0;
+
+			delete doc;
+			*xmldoc = 0;
 
 			if (syntaxError) syntaxError(userdata,errorText);
 			return SIMC_ERROR_SYNTAX;
@@ -58,6 +63,8 @@ int SIMC_XML_OpenString(const char* string, SIMC_XML_DOCUMENT** xmldoc, SIMC_Cal
 		errorText[8191] = 0;
 
 		*xmldoc = 0;
+		delete doc;
+
 		if (syntaxError) syntaxError(userdata,errorText);
 		return SIMC_ERROR_SYNTAX;
 	}

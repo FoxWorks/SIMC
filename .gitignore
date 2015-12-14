@@ -16,6 +16,7 @@ support/vs2003/*/*
 support/vs2005/*/*
 support/vs2008/*/*
 support/vs2010/*/*
+support/vs2013/*/*
 *.suo
 *.user
 *.sln.docstates

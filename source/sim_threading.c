@@ -27,14 +27,14 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include "sim_core.h"
 #ifdef _WIN32
-#  include "windows.h"
+#	include <windows.h>
 #else
-#  include <stdlib.h>
-#  include <pthread.h>
-#  include <sched.h>
-#  include <signal.h>
-#  include <sys/time.h>
-#  include <unistd.h>
+#	include <stdlib.h>
+#	include <pthread.h>
+#	include <sched.h>
+#	include <signal.h>
+#	include <sys/time.h>
+#	include <unistd.h>
 #endif
 
 // Use WinAPI/POSIX implementation of SRW locks instead of custom implementation (windows-only)
@@ -178,7 +178,15 @@ DWORD WINAPI SIMC_Thread_Internal_New(LPVOID lpParam) {
 ///
 /// @returns Thread handle
 ////////////////////////////////////////////////////////////////////////////////
-SIMC_THREAD_ID SIMC_Thread_Create(void* func_ptr, void* userdata) {
+typedef struct tagTHREADNAME_INFO
+{
+	DWORD dwType;		// Must be 0x1000
+	LPCSTR szName;		// Pointer to name (in user addr space)
+	DWORD dwThreadID;	// Thread ID (-1 = caller thread)
+	DWORD dwFlags;		// Reserved for future use, must be zero
+} THREADNAME_INFO;
+
+SIMC_THREAD_ID SIMC_Thread_CreateWithName(void* funcPtr, void* userData, char* funcName) {
 	SIMC_THREAD_ID ID;
 	SIMC_THREAD* thread, *thread_tmp;
 	HANDLE hThread;
@@ -198,17 +206,17 @@ SIMC_THREAD_ID SIMC_Thread_Create(void* func_ptr, void* userdata) {
 	ID = (((char*)SIMC_Thread_NextID)++);
 
 	//Store thread information in the thread list
-	thread->function = func_ptr;
+	thread->function = funcPtr;
 	thread->id       = ID;
 
 	//Create thread
 	hThread = CreateThread(
-	              NULL,              //Default security attributes
-	              0,                 //Default stack size (1 MB)
-	              SIMC_Thread_Internal_New,       //Thread function (a wrapper function)
-	              (LPVOID)userdata,  //Argument to thread is the user argument
-	              0,                 //Default creation flags
-	              &dwThreadId        //Returned thread identifier
+	              NULL,                       //Default security attributes
+	              0,                          //Default stack size (1 MB)
+	              SIMC_Thread_Internal_New,   //Thread function (a wrapper function)
+	              (LPVOID)userData,           //Argument to thread is the user argument
+	              0,                          //Default creation flags
+	              &dwThreadId                 //Returned thread identifier
 	         );
 
 	//Did the thread creation fail?
@@ -230,6 +238,22 @@ SIMC_THREAD_ID SIMC_Thread_Create(void* func_ptr, void* userdata) {
 	thread_tmp->next = thread;
 	thread->previous = thread_tmp;
 	thread->next     = NULL;
+
+	// Set name for the thread
+	if (funcName) {
+		THREADNAME_INFO info;
+		info.dwType = 0x1000;
+		info.szName = funcName;
+		info.dwThreadID = dwThreadId;
+		info.dwFlags = 0;
+
+		__try
+		{
+			RaiseException( 0x406D1388, 0, sizeof(info)/sizeof(DWORD), (ULONG_PTR*)&info );
+		}
+		__except (EXCEPTION_CONTINUE_EXECUTION)
+		{ }
+	}
 
 	//Leave critical section
 	SIMC_Thread_LeaveCriticalSection();
