@@ -17,6 +17,7 @@ support/vs2005/*/*
 support/vs2008/*/*
 support/vs2010/*/*
 support/vs2013/*/*
+support/vs2015/*/*
 *.suo
 *.user
 *.sln.docstates
@@ -43,3 +44,5 @@ support/vs2013/*/*
 *.sdf
 *.psess
 *.vsp
+*.VC.db
+*.VC.opendb

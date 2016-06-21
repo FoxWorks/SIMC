@@ -41,15 +41,15 @@ SIMC_LIBRARY_ID SIMC_Library_Load(char* library_name) {
 #endif
 	full_name[8192] = 0;
 
-	handle = LoadLibrary(full_name);
+	handle = LoadLibrary((LPCWSTR)full_name);
 	if (handle == NULL) {
 #ifdef PLATFORM32
 		snprintf(full_name, 8192, "%s_32", library_name);
 #endif
 		full_name[8192] = 0;
-		handle = LoadLibrary(full_name);
+		handle = LoadLibrary((LPCWSTR)full_name);
 		if (handle == NULL) {
-			handle = LoadLibrary(library_name);
+			handle = LoadLibrary((LPCWSTR)library_name);
 		}
 	}
 	return (SIMC_LIBRARY_ID)handle;

@@ -107,7 +107,11 @@ typedef void* SIMC_EVENT_ID;
 /// SRW lock (slim read/write) handle
 typedef void* SIMC_SRW_ID;
 /// Invalid handle for use with SIMC_LOCK_ID, SIMC_SRW_ID, SIMC_THREAD_ID
-#define SIMC_THREAD_BAD_ID ((void*)0xFFFFFFFF)
+#ifdef PLATFORM64
+#	define SIMC_THREAD_BAD_ID ((void*)0xFFFFFFFF)
+#else
+#	define SIMC_THREAD_BAD_ID ((void*)0xFFFFFFFFFFFFFFFF)
+#endif
 
 
 
