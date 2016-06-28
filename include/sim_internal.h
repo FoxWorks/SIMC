@@ -29,11 +29,15 @@ extern "C" {
 #endif
 
 
-/// Compatibility with Windows systems
+// Compatibility with Windows systems
 #ifdef _WIN32
-#define snprintf _snprintf
-#define snscanf _snscanf
-#define alloca _alloca
+#	if _MSC_VER>=1900
+#		define STDC99
+#	else
+#		define snprintf _snprintf
+#		define snscanf _snscanf
+#	endif
+#	define alloca _alloca
 #endif
 
 // Required for correct memory allocations when loaded from DLL

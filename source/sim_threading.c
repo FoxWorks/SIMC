@@ -546,7 +546,7 @@ void SIMC_Lock_WaitFor(SIMC_LOCK_ID lockID) {
 /// @brief Create a new event
 ////////////////////////////////////////////////////////////////////////////////
 SIMC_EVENT_ID SIMC_Event_Create(char* eventName) {
-	HANDLE handle = CreateEvent(NULL, TRUE, FALSE, (LPCWSTR)eventName);
+	HANDLE handle = CreateEventA(NULL, TRUE, FALSE, (LPCSTR)eventName);
 	if (handle == NULL) return SIMC_THREAD_BAD_ID;
 	return (SIMC_EVENT_ID)handle;
 }
